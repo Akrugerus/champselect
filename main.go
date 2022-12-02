@@ -1,7 +1,11 @@
 package main
 
+import "fmt"
+
 func main() {
-	game := NewGame()
-	_ = game
-	LoadDragon()
+	clist := ChampionList()
+	for _, x := range clist {
+		fmt.Printf("%v\n", x)
+	}
+	fmt.Printf("Number of champions: %v\n", len(clist))
 }

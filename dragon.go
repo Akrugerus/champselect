@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,7 +8,6 @@ import (
 )
 
 const temp_dragon_url = "https://ddragon.leagueoflegends.com/cdn/dragontail-12.22.1.tgz"
-const dragon_path = "."
 
 func FetchDragon() (*os.File, error) {
 	fmt.Println("Downloading dragon tarball")
@@ -19,7 +17,7 @@ func FetchDragon() (*os.File, error) {
 		fmt.Println("Unable to fetch dragon")
 		return nil, err
 	}
-	fmt.Printf("%v", res.Header)
+	fmt.Printf("%v\n", res.Header)
 
 	// Open the dragon tarball file handler
 	file, err := os.Create("dragon.tar.gz")
@@ -41,33 +39,41 @@ func FetchDragon() (*os.File, error) {
 	return file, nil
 }
 
-func LoadDragon() error {
-	// declare a basic reader
+func GetDragonArchive() (*os.File, error) {
 	f, err := os.Open("dragon.tar.gz")
 	if err != nil {
 		f, err = FetchDragon()
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-
-	// Load the champ info from the archive
-	champinfo, err := UntarSingleFile("12.22.1/data/en_US/champion.json", f)
-	if err != nil {
-		return err
-	}
-
-	// decode the root champ info to json
-	var a = make(map[string]any, 0)
-	if err = json.Unmarshal(champinfo, &a); err != nil {
-		return err
-	}
-
-	fmt.Printf("%v", a["data"])
-
-	// Unzip the dragon tarball
-	// fmt.Println("Unzipping tarball")
-	// exec.Command("tar", "-xzvf", "dragon.tar.gz")
-
-	return nil
+	return f, nil
 }
+
+// func LoadDragon() error {
+// 	// declare a basic reader
+// 	f, err := os.Open("dragon.tar.gz")
+// 	if err != nil {
+// 		f, err = FetchDragon()
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
+
+// 	// Load the champ info from the archive
+
+// 	// decode the root champ info to map
+// 	var a = make(map[string][]byte, 0)
+// 	if err = json.Unmarshal(champinfo, &a); err != nil {
+// 		return err
+// 	}
+
+// 	// Print the map keys which should be champion names
+// 	var champs = make([]map[string][]byte, 0)
+// 	if err = json.Unmarshal(a["data"], &champs)
+// 		// Unzip the dragon tarball
+// 	// fmt.Println("Unzipping tarball")
+// 	// exec.Command("tar", "-xzvf", "dragon.tar.gz")
+
+// 	return nil
+// }

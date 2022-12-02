@@ -76,9 +76,9 @@ func Untar(dst string, r io.Reader) error {
 	}
 }
 
-// UntarSingleFile takes a search path and a reader; a tar reader loops over the tarfile
+// ExtractFile takes a search path and a reader; a tar reader loops over the tarfile
 // looking for a file matching the search path and returns the file as a byte slice if found
-func UntarSingleFile(path string, r io.Reader) ([]byte, error) {
+func ExtractFile(path string, r io.Reader) ([]byte, error) {
 	gzr, err := gzip.NewReader(r)
 	if err != nil {
 		return nil, err
